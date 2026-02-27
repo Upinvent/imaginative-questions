@@ -1,0 +1,1136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Imaginative Questions — Actor's Toolkit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #c9a84c;
+    --gold-light: #e8c96a;
+    --gold-dim: rgba(201,168,76,0.18);
+    --gold-subtle: rgba(201,168,76,0.08);
+    --bg: #0b0a09;
+    --surface: #111009;
+    --surface2: #181610;
+    --text: #f0ead8;
+    --text-dim: rgba(240,234,216,0.5);
+    --text-faint: rgba(240,234,216,0.22);
+    --border: rgba(201,168,76,0.18);
+    --border-focus: rgba(201,168,76,0.55);
+    --red: #c0392b;
+    --green: #27ae60;
+    --radius: 3px;
+    --sidebar-w: 240px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    line-height: 1.6;
+  }
+
+  /* ── TOAST ── */
+  #toast {
+    position: fixed; top: 20px; right: 20px; z-index: 9999;
+    background: var(--gold); color: #0b0a09;
+    padding: 11px 22px; border-radius: var(--radius);
+    font-family: 'Cormorant Garamond', serif; font-size: 15px; font-weight: 600;
+    letter-spacing: 0.4px; opacity: 0; pointer-events: none;
+    transform: translateY(-6px);
+    transition: opacity 0.25s, transform 0.25s;
+    max-width: 320px;
+  }
+  #toast.show { opacity: 1; transform: translateY(0); }
+  #toast.error { background: var(--red); color: #fff; }
+  #toast.info { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
+
+  /* ── VIEWS ── */
+  .view { display: none; }
+  .view.active { display: block; }
+
+  /* ═══════════════════════════════
+     HOME
+  ═══════════════════════════════ */
+  #home {
+    min-height: 100vh;
+    display: flex; align-items: center; justify-content: center;
+    position: relative; overflow: hidden;
+  }
+  .home-bg {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 70% 50% at 50% 25%, rgba(201,168,76,0.1) 0%, transparent 65%),
+      radial-gradient(ellipse 40% 30% at 80% 80%, rgba(201,168,76,0.04) 0%, transparent 60%);
+  }
+  .home-bg::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image:
+      repeating-linear-gradient(0deg, transparent, transparent 55px, rgba(201,168,76,0.025) 55px, rgba(201,168,76,0.025) 56px),
+      repeating-linear-gradient(90deg, transparent, transparent 55px, rgba(201,168,76,0.025) 55px, rgba(201,168,76,0.025) 56px);
+  }
+  .home-inner {
+    position: relative; z-index: 1;
+    text-align: center; padding: 60px 24px; max-width: 660px; width: 100%;
+    animation: fadeUp 0.7s ease both;
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .home-eyebrow {
+    font-family: 'Cormorant Garamond', serif;
+    color: var(--gold); font-size: 11px; letter-spacing: 5px;
+    text-transform: uppercase; margin-bottom: 20px;
+  }
+  .home-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(54px, 12vw, 100px);
+    font-weight: 900; color: var(--text);
+    line-height: 0.95; margin-bottom: 18px;
+    text-shadow: 0 4px 40px rgba(201,168,76,0.15);
+  }
+  .home-title em { font-style: italic; color: var(--gold); }
+  .home-sub {
+    color: var(--text-dim); font-size: 14px; letter-spacing: 3px;
+    margin-bottom: 52px; font-style: italic;
+  }
+  .home-btns {
+    display: flex; gap: 14px; justify-content: center; flex-wrap: wrap;
+    margin-bottom: 48px;
+  }
+  .btn-gold {
+    background: var(--gold); color: #0b0a09; border: none;
+    padding: 14px 36px; font-family: 'Playfair Display', serif;
+    font-size: 16px; font-weight: 700; cursor: pointer;
+    letter-spacing: 0.5px; border-radius: var(--radius);
+    transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+    display: inline-flex; align-items: center; gap: 8px;
+  }
+  .btn-gold:hover { background: var(--gold-light); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(201,168,76,0.25); }
+  .btn-ghost {
+    background: transparent; color: var(--gold);
+    border: 1px solid rgba(201,168,76,0.4); padding: 14px 36px;
+    font-family: 'Playfair Display', serif; font-size: 16px;
+    cursor: pointer; letter-spacing: 0.5px; border-radius: var(--radius);
+    transition: all 0.2s;
+    display: inline-flex; align-items: center; gap: 8px;
+  }
+  .btn-ghost:hover { border-color: var(--gold); background: var(--gold-subtle); transform: translateY(-2px); }
+  .home-divider { width: 60px; height: 1px; background: var(--border); margin: 0 auto 28px; }
+
+  /* ═══════════════════════════════
+     FORM LAYOUT
+  ═══════════════════════════════ */
+  #form-view { display: none; min-height: 100vh; }
+  #form-view.active { display: flex; flex-direction: column; }
+
+  .form-topbar {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(11,10,9,0.95); backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 12px 24px;
+    display: flex; align-items: center; gap: 16px;
+  }
+  .form-topbar-left { display: flex; align-items: center; gap: 16px; flex: 1; }
+  .topbar-logo {
+    font-family: 'Playfair Display', serif; font-size: 18px;
+    font-weight: 900; color: var(--gold); letter-spacing: -0.5px;
+    white-space: nowrap;
+  }
+  .topbar-sep { width: 1px; height: 24px; background: var(--border); }
+  .topbar-meta { display: flex; gap: 12px; flex: 1; }
+  .topbar-input {
+    background: var(--gold-subtle); border: 1px solid var(--border);
+    color: var(--text); padding: 7px 14px;
+    font-family: 'Cormorant Garamond', serif; font-size: 15px;
+    border-radius: var(--radius); outline: none;
+    transition: border-color 0.2s; flex: 1; min-width: 0;
+  }
+  .topbar-input:focus { border-color: var(--gold); }
+  .topbar-input::placeholder { color: var(--text-faint); font-style: italic; }
+  .autosave-badge {
+    font-family: 'Cormorant Garamond', serif; font-size: 12px;
+    color: var(--text-dim); letter-spacing: 1px; white-space: nowrap;
+    display: flex; align-items: center; gap: 5px;
+  }
+  .autosave-dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--green); display: inline-block;
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+  .form-body { display: flex; flex: 1; }
+
+  /* Sidebar */
+  .form-sidebar {
+    width: var(--sidebar-w); min-height: calc(100vh - 57px);
+    background: var(--surface); border-right: 1px solid var(--border);
+    padding: 20px 12px; position: sticky; top: 57px; height: calc(100vh - 57px);
+    overflow-y: auto; display: flex; flex-direction: column;
+  }
+  .prog-wrap { text-align: center; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid var(--border); }
+  .prog-ring-svg { width: 72px; height: 72px; }
+  .ring-bg { fill: none; stroke: var(--gold-dim); stroke-width: 5; }
+  .ring-fill {
+    fill: none; stroke: var(--gold); stroke-width: 5;
+    stroke-linecap: round;
+    transform: rotate(-90deg); transform-origin: 50% 50%;
+    transition: stroke-dasharray 0.5s ease;
+  }
+  .prog-label {
+    font-family: 'Playfair Display', serif; font-size: 13px;
+    color: var(--gold); margin-top: 6px;
+  }
+  .sidebar-nav { display: flex; flex-direction: column; gap: 3px; flex: 1; }
+  .snav-btn {
+    background: none; border: none; text-align: left;
+    padding: 8px 12px; color: var(--text-dim); cursor: pointer;
+    font-family: 'Cormorant Garamond', serif; font-size: 13px;
+    letter-spacing: 0.3px; border-radius: var(--radius);
+    transition: all 0.15s; border-left: 2px solid transparent;
+    line-height: 1.3;
+  }
+  .snav-btn:hover { color: var(--text); background: var(--gold-subtle); }
+  .snav-btn.active { color: var(--gold); background: rgba(201,168,76,0.1); border-left-color: var(--gold); }
+  .snav-btn .sec-num { color: var(--gold); font-weight: 700; margin-right: 4px; }
+
+  /* Main content */
+  .form-main {
+    flex: 1; padding: 36px 40px 80px; min-width: 0;
+    max-width: 860px;
+  }
+  .sec-heading {
+    font-family: 'Playfair Display', serif; font-size: 30px; font-weight: 900;
+    color: var(--text); margin-bottom: 6px; line-height: 1;
+  }
+  .sec-desc {
+    color: var(--text-dim); font-size: 13px; letter-spacing: 2px;
+    margin-bottom: 28px; font-style: italic;
+  }
+  .section-content { display: none; }
+  .section-content.active { display: block; }
+
+  /* Senses bar */
+  .senses-bar {
+    background: rgba(201,168,76,0.06); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 18px 20px; margin-bottom: 28px;
+  }
+  .senses-title {
+    font-family: 'Cormorant Garamond', serif; color: var(--gold);
+    font-size: 11px; letter-spacing: 4px; text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+  .senses-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+  }
+  .sense-item label {
+    display: block; color: var(--text-dim); font-size: 10px;
+    letter-spacing: 2px; text-transform: uppercase; margin-bottom: 5px;
+  }
+  .sense-item textarea {
+    width: 100%; background: var(--surface2);
+    border: 1px solid rgba(201,168,76,0.15);
+    color: var(--text); padding: 7px 9px;
+    font-family: 'Cormorant Garamond', serif; font-size: 13px;
+    border-radius: var(--radius); resize: none; outline: none;
+    line-height: 1.5; transition: border-color 0.2s; height: 70px;
+  }
+  .sense-item textarea:focus { border-color: var(--gold); }
+  .sense-item textarea::placeholder { color: var(--text-faint); font-style: italic; }
+
+  /* Fields grid */
+  .fields-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 18px;
+    margin-bottom: 32px;
+  }
+  .field-wrap {}
+  .field-label {
+    display: block; color: var(--text-dim);
+    font-size: 10px; letter-spacing: 2.5px; text-transform: uppercase;
+    margin-bottom: 7px;
+  }
+  .field-wrap textarea, .field-wrap input {
+    width: 100%;
+    background: var(--surface2); border: 1px solid var(--border);
+    color: var(--text); padding: 11px 14px;
+    font-family: 'Cormorant Garamond', serif; font-size: 15px;
+    line-height: 1.6; border-radius: var(--radius);
+    resize: vertical; outline: none;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .field-wrap textarea:focus, .field-wrap input:focus {
+    border-color: var(--border-focus);
+    background: rgba(201,168,76,0.04);
+  }
+  .field-wrap textarea::placeholder, .field-wrap input::placeholder {
+    color: var(--text-faint); font-style: italic;
+  }
+  .field-full { grid-column: 1 / -1; }
+
+  /* Notes section */
+  .notes-block {
+    background: rgba(201,168,76,0.04); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 20px; margin-bottom: 32px;
+  }
+  .notes-header {
+    font-family: 'Cormorant Garamond', serif; color: var(--gold);
+    font-size: 11px; letter-spacing: 4px; text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  #notes-textarea {
+    width: 100%; min-height: 120px; background: var(--surface2);
+    border: 1px solid var(--border); color: var(--text);
+    padding: 14px 16px; font-family: 'Cormorant Garamond', serif; font-size: 15px;
+    line-height: 1.7; border-radius: var(--radius); resize: vertical; outline: none;
+    transition: border-color 0.2s;
+  }
+  #notes-textarea:focus { border-color: var(--border-focus); }
+  #notes-textarea::placeholder { color: var(--text-faint); font-style: italic; }
+
+  /* Nav buttons */
+  .form-nav {
+    display: flex; gap: 12px; align-items: center;
+    padding-top: 24px; border-top: 1px solid var(--border);
+    flex-wrap: wrap;
+  }
+  .nav-prev, .nav-next {
+    background: none; border: 1px solid var(--border);
+    color: var(--gold); padding: 10px 22px;
+    font-family: 'Cormorant Garamond', serif; font-size: 15px;
+    cursor: pointer; border-radius: var(--radius); transition: all 0.2s;
+  }
+  .nav-prev:hover, .nav-next:hover { border-color: var(--gold); background: var(--gold-subtle); }
+  .nav-next { background: var(--gold); color: #0b0a09; border-color: var(--gold); font-weight: 600; }
+  .nav-next:hover { background: var(--gold-light); border-color: var(--gold-light); }
+
+  /* Bottom Save bar */
+  .save-bar {
+    position: fixed; bottom: 0; left: var(--sidebar-w); right: 0; z-index: 99;
+    background: rgba(11,10,9,0.97); backdrop-filter: blur(12px);
+    border-top: 1px solid var(--border);
+    padding: 12px 40px; display: flex; align-items: center; gap: 16px;
+  }
+  .save-bar-status { color: var(--text-dim); font-size: 13px; font-style: italic; flex: 1; }
+  .btn-save-lib {
+    background: var(--gold); color: #0b0a09; border: none;
+    padding: 11px 28px; font-family: 'Playfair Display', serif;
+    font-size: 15px; font-weight: 700; cursor: pointer;
+    border-radius: var(--radius); transition: all 0.2s; letter-spacing: 0.3px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .btn-save-lib:hover { background: var(--gold-light); transform: translateY(-1px); }
+  .btn-to-lib {
+    background: transparent; color: var(--gold);
+    border: 1px solid rgba(201,168,76,0.4);
+    padding: 11px 20px; font-family: 'Cormorant Garamond', serif;
+    font-size: 14px; cursor: pointer; border-radius: var(--radius);
+    transition: all 0.2s;
+  }
+  .btn-to-lib:hover { background: var(--gold-subtle); border-color: var(--gold); }
+
+  /* ═══════════════════════════════
+     LIBRARY
+  ═══════════════════════════════ */
+  #library { min-height: 100vh; }
+  .library-header {
+    background: var(--surface); border-bottom: 1px solid var(--border);
+    padding: 20px 36px; display: flex; align-items: center; gap: 16px;
+  }
+  .lib-title {
+    font-family: 'Playfair Display', serif; font-size: 28px;
+    font-weight: 900; color: var(--text); flex: 1;
+  }
+  .lib-search {
+    padding: 24px 36px;
+    display: flex; gap: 12px; align-items: center; flex-wrap: wrap;
+  }
+  .search-input {
+    flex: 1; min-width: 200px; max-width: 400px;
+    background: var(--surface); border: 1px solid var(--border);
+    color: var(--text); padding: 10px 16px;
+    font-family: 'Cormorant Garamond', serif; font-size: 15px;
+    border-radius: var(--radius); outline: none; transition: border-color 0.2s;
+  }
+  .search-input:focus { border-color: var(--gold); }
+  .search-input::placeholder { color: var(--text-faint); font-style: italic; }
+  .lib-body { padding: 0 36px 60px; }
+  .empty-state {
+    text-align: center; padding: 80px 20px;
+    animation: fadeUp 0.5s ease both;
+  }
+  .empty-icon { font-size: 56px; margin-bottom: 16px; }
+  .empty-state p {
+    color: var(--text-dim); font-style: italic;
+    font-size: 17px; margin-bottom: 24px;
+  }
+  .show-group { margin-bottom: 40px; }
+  .show-label {
+    display: flex; align-items: center; gap: 10px;
+    font-family: 'Playfair Display', serif; font-size: 19px;
+    font-weight: 700; color: var(--gold); margin-bottom: 16px;
+    padding-bottom: 10px; border-bottom: 1px solid var(--border);
+  }
+  .cards-row { display: flex; flex-wrap: wrap; gap: 16px; }
+  .char-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 4px; padding: 20px 18px; width: 210px;
+    transition: all 0.2s; cursor: pointer; position: relative;
+    animation: fadeUp 0.4s ease both;
+  }
+  .char-card:hover { border-color: rgba(201,168,76,0.4); transform: translateY(-3px); box-shadow: 0 12px 32px rgba(0,0,0,0.4); }
+  .char-card-name { font-family: 'Playfair Display', serif; font-size: 19px; font-weight: 700; color: var(--text); margin-bottom: 5px; }
+  .char-card-occ { color: var(--text-dim); font-size: 13px; font-style: italic; margin-bottom: 10px; min-height: 18px; }
+  .char-card-date { color: rgba(201,168,76,0.5); font-size: 11px; letter-spacing: 1px; margin-bottom: 14px; }
+  .char-card-actions { display: flex; gap: 6px; }
+  .ccard-btn {
+    border: none; padding: 7px 11px; cursor: pointer;
+    font-family: 'Cormorant Garamond', serif; font-size: 12px;
+    border-radius: var(--radius); transition: all 0.15s; letter-spacing: 0.3px;
+  }
+  .ccard-btn.study { background: var(--gold); color: #0b0a09; font-weight: 700; flex: 1; }
+  .ccard-btn.study:hover { background: var(--gold-light); }
+  .ccard-btn.edit { background: rgba(255,255,255,0.07); color: var(--text-dim); }
+  .ccard-btn.edit:hover { background: rgba(255,255,255,0.13); color: var(--text); }
+  .ccard-btn.del { background: rgba(192,57,43,0.12); color: rgba(192,57,43,0.8); }
+  .ccard-btn.del:hover { background: rgba(192,57,43,0.25); }
+
+  /* ═══════════════════════════════
+     STUDY VIEW
+  ═══════════════════════════════ */
+  #study { min-height: 100vh; }
+  .study-header {
+    background: var(--surface); border-bottom: 1px solid var(--border);
+    padding: 24px 36px; display: flex; align-items: flex-start; gap: 16px;
+  }
+  .study-char { font-family: 'Playfair Display', serif; font-size: 38px; font-weight: 900; color: var(--text); line-height: 1; }
+  .study-show { color: var(--gold); font-style: italic; font-size: 15px; margin-top: 5px; }
+  .study-header-info { flex: 1; }
+  .study-body { padding: 28px 36px 60px; max-width: 900px; }
+  .study-senses {
+    background: var(--gold-subtle); border: 1px solid var(--border);
+    border-radius: 4px; padding: 18px 20px; margin-bottom: 24px;
+  }
+  .study-senses-title { color: var(--gold); font-size: 10px; letter-spacing: 4px; text-transform: uppercase; margin-bottom: 12px; }
+  .study-senses-row { display: flex; flex-wrap: wrap; gap: 12px; }
+  .study-sense-chip {
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 8px 14px;
+  }
+  .study-sense-name { color: var(--gold); font-size: 10px; letter-spacing: 2px; text-transform: uppercase; display: block; margin-bottom: 3px; }
+  .study-sense-val { color: var(--text); font-size: 14px; }
+  .study-accordion { display: flex; flex-direction: column; gap: 8px; }
+  .acc-item { border: 1px solid var(--border); border-radius: 4px; overflow: hidden; }
+  .acc-trigger {
+    width: 100%; background: var(--surface); border: none;
+    padding: 15px 20px; display: flex; align-items: center;
+    cursor: pointer; transition: background 0.2s; gap: 12px;
+  }
+  .acc-trigger:hover { background: var(--surface2); }
+  .acc-trigger.open { background: rgba(201,168,76,0.07); }
+  .acc-title { flex: 1; text-align: left; font-family: 'Playfair Display', serif; font-size: 17px; font-weight: 700; color: var(--text); }
+  .acc-count { font-size: 12px; color: var(--gold); font-family: 'Cormorant Garamond', serif; }
+  .acc-chevron { color: var(--text-dim); font-size: 11px; transition: transform 0.2s; }
+  .acc-trigger.open .acc-chevron { transform: rotate(180deg); }
+  .acc-body {
+    display: none; padding: 18px 20px;
+    background: rgba(201,168,76,0.03);
+    border-top: 1px solid var(--border);
+  }
+  .acc-body.open { display: block; animation: fadeUp 0.2s ease both; }
+  .acc-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .acc-field {}
+  .acc-field-label { color: rgba(201,168,76,0.7); font-size: 10px; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 4px; }
+  .acc-field-val { color: var(--text); font-size: 15px; line-height: 1.6; white-space: pre-wrap; }
+  .study-notes-block {
+    margin-top: 20px; background: var(--gold-subtle);
+    border: 1px solid var(--border); border-radius: 4px; padding: 18px 20px;
+  }
+  .study-notes-title { color: var(--gold); font-size: 10px; letter-spacing: 4px; text-transform: uppercase; margin-bottom: 10px; }
+  .study-notes-val { color: var(--text); font-size: 15px; line-height: 1.7; white-space: pre-wrap; }
+
+  /* ── BACK BTN ── */
+  .back-btn {
+    background: none; border: none; color: var(--text-dim); cursor: pointer;
+    font-family: 'Cormorant Garamond', serif; font-size: 13px;
+    letter-spacing: 1px; padding: 4px 0; transition: color 0.2s;
+    display: flex; align-items: center; gap: 5px;
+  }
+  .back-btn:hover { color: var(--gold); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    :root { --sidebar-w: 0px; }
+    .form-sidebar { display: none; }
+    .form-main { padding: 20px 18px 100px; }
+    .form-topbar-left { flex-wrap: wrap; }
+    .topbar-meta { flex-direction: column; gap: 8px; }
+    .save-bar { left: 0; padding: 10px 18px; flex-wrap: wrap; gap: 8px; }
+    .fields-grid { grid-template-columns: 1fr; }
+    .senses-grid { grid-template-columns: 1fr 1fr; }
+    .library-header { padding: 16px 18px; flex-wrap: wrap; }
+    .lib-body { padding: 0 18px 60px; }
+    .lib-search { padding: 16px 18px; }
+    .study-header { padding: 18px; flex-wrap: wrap; }
+    .study-body { padding: 18px 18px 60px; }
+    .acc-fields { grid-template-columns: 1fr; }
+    .home-btns { flex-direction: column; align-items: center; }
+    .home-title { font-size: 54px; }
+    .study-char { font-size: 28px; }
+    .cards-row .char-card { width: 100%; }
+    .form-topbar { flex-wrap: wrap; gap: 8px; }
+    .autosave-badge { font-size: 11px; }
+  }
+  @media (min-width: 769px) and (max-width: 1100px) {
+    .senses-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<!-- ═══════ HOME ═══════ -->
+<div id="home" class="view active">
+  <div class="home-bg"></div>
+  <div class="home-inner">
+    <div class="home-eyebrow">The Actor's Toolkit</div>
+    <h1 class="home-title"><em>Imaginative</em><br>Questions</h1>
+    <p class="home-sub">Touch · Taste · Smell · See · Hear</p>
+    <div class="home-divider"></div>
+    <div class="home-btns">
+      <button class="btn-gold" onclick="App.newChar()">✦ New Character</button>
+      <button class="btn-ghost" onclick="App.showView('library')">⊞ My Library <span id="lib-count-badge"></span></button>
+    </div>
+    <p style="color:var(--text-faint);font-size:12px;letter-spacing:1px;font-style:italic;">Auto-saves as you type • Works on all devices</p>
+  </div>
+</div>
+
+<!-- ═══════ FORM VIEW ═══════ -->
+<div id="form-view" class="view">
+  <!-- Top bar -->
+  <div class="form-topbar">
+    <div class="form-topbar-left">
+      <button class="back-btn" onclick="App.showView('home')">← Home</button>
+      <div class="topbar-sep"></div>
+      <span class="topbar-logo">IQ</span>
+      <div class="topbar-meta">
+        <input class="topbar-input" id="input-char" placeholder="Character Name…" oninput="App.autoSave()" />
+        <input class="topbar-input" id="input-show" placeholder="Show / Production…" oninput="App.autoSave()" />
+      </div>
+    </div>
+    <div class="autosave-badge">
+      <span class="autosave-dot"></span>
+      <span id="autosave-label">Auto-saving…</span>
+    </div>
+  </div>
+
+  <div class="form-body">
+    <!-- Sidebar nav -->
+    <aside class="form-sidebar">
+      <div class="prog-wrap">
+        <svg class="prog-ring-svg" viewBox="0 0 72 72">
+          <circle class="ring-bg" cx="36" cy="36" r="30"/>
+          <circle class="ring-fill" id="ring-fill" cx="36" cy="36" r="30"
+            stroke-dasharray="0 188.5" stroke-dashoffset="0"/>
+        </svg>
+        <div class="prog-label" id="prog-label">0% Complete</div>
+      </div>
+      <nav class="sidebar-nav" id="sidebar-nav"></nav>
+    </aside>
+
+    <!-- Main -->
+    <main class="form-main" id="form-main-content"></main>
+  </div>
+
+  <!-- Save bar -->
+  <div class="save-bar">
+    <span class="save-bar-status" id="save-status">Last saved: never</span>
+    <button class="btn-to-lib" onclick="App.showView('library')">View Library</button>
+    <button class="btn-save-lib" onclick="App.saveToLibrary()">💾 Save to Library</button>
+  </div>
+</div>
+
+<!-- ═══════ LIBRARY ═══════ -->
+<div id="library" class="view">
+  <div class="library-header">
+    <button class="back-btn" onclick="App.showView('home')">← Home</button>
+    <h2 class="lib-title">My Library</h2>
+    <button class="btn-ghost" style="padding:10px 20px;font-size:14px;" onclick="App.newChar()">+ New Character</button>
+  </div>
+  <div class="lib-search">
+    <input class="search-input" id="lib-search" placeholder="Search by character or show…" oninput="App.renderLibrary()">
+  </div>
+  <div class="lib-body" id="lib-body"></div>
+</div>
+
+<!-- ═══════ STUDY VIEW ═══════ -->
+<div id="study" class="view">
+  <div class="study-header">
+    <div class="study-header-info">
+      <div class="study-char" id="study-char-name"></div>
+      <div class="study-show" id="study-show-name"></div>
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;">
+      <button class="back-btn" onclick="App.showView('library')">← Library</button>
+      <button class="btn-ghost" style="padding:9px 18px;font-size:13px;" id="study-edit-btn">Edit</button>
+    </div>
+  </div>
+  <div class="study-body" id="study-body"></div>
+</div>
+
+<script>
+// ══════════════════════════════════════════
+//  DATA DEFINITIONS
+// ══════════════════════════════════════════
+const SENSES = ['Touch', 'Taste', 'Smell', 'See', 'Hear'];
+
+const SECTIONS = [
+  {
+    id: 'who', title: '1. Who Am I?', desc: 'Identity · Body · Personality',
+    fields: [
+      { id: 'name',         label: 'Name',                       placeholder: 'Character\'s full name…' },
+      { id: 'occupation',   label: 'Occupation',                 placeholder: 'What do they do for a living?' },
+      { id: 'age',          label: 'Age',                        placeholder: 'How old are they?' },
+      { id: 'health',       label: 'Health',                     placeholder: 'Physical health status…' },
+      { id: 'physTraits',   label: 'Physical Traits',            placeholder: 'Height, build, appearance…' },
+      { id: 'energy',       label: 'Energy Level',               placeholder: 'High / medium / low energy…' },
+      { id: 'introvert',    label: 'Introvert–Extrovert',        placeholder: 'Where on the spectrum?' },
+      { id: 'education',    label: 'Education / Intelligence',   placeholder: 'Formal education, street smarts…' },
+      { id: 'sexuality',    label: 'Sexuality',                  placeholder: 'Orientation, expression…' },
+      { id: 'religion',     label: 'Religion / Beliefs',         placeholder: 'Faith, spirituality, ideology…' },
+      { id: 'lifestyle',    label: 'Taste In Life Style',        placeholder: 'Minimalist? Lavish? Chaotic?' },
+      { id: 'walk',         label: 'Walk',                       placeholder: 'How do they move through space?' },
+      { id: 'speaking',     label: 'Manner Of Speaking / Vocabulary', placeholder: 'Accent, pace, word choice…' },
+      { id: 'truthTelling', label: 'Truth-Telling',              placeholder: 'Honest? Evasive? Lies compulsively?' },
+      { id: 'nerves',       label: 'State Of Nerves',            placeholder: 'Calm? Anxious? Explosive?' },
+      { id: 'favColor',     label: 'Favorite Color (MOST REACTIVE)', placeholder: 'Color that triggers strongest reaction…' },
+      { id: 'acuteSense',   label: 'Most Acute Sense',          placeholder: 'Which sense is sharpest for them?' },
+    ]
+  },
+  {
+    id: 'time', title: '2. What Time Is It?', desc: 'Era · Season · Moment',
+    fields: [
+      { id: 'era',       label: 'Era',             placeholder: 'Historical period or year…' },
+      { id: 'season',    label: 'Season',           placeholder: 'Spring, summer, fall, winter…' },
+      { id: 'day',       label: 'Day',              placeholder: 'Day of the week, significance…' },
+      { id: 'minute',    label: 'Specific Minute',  placeholder: 'Time of day, what just happened…' },
+    ]
+  },
+  {
+    id: 'favs', title: '3. Favorite Things?', desc: 'Pleasures · Comforts · Desires',
+    fields: [
+      { id: 'food',    label: 'Food',    placeholder: 'Favorite foods, comfort eating…' },
+      { id: 'music',   label: 'Music',   placeholder: 'What do they listen to?' },
+      { id: 'art',     label: 'Art',     placeholder: 'Visual art, literature, film…' },
+      { id: 'clothes', label: 'Clothes', placeholder: 'Style, signature items…' },
+    ]
+  },
+  {
+    id: 'want', title: '4. What Do I Want?', desc: 'Objective · Drive · Need',
+    fields: [
+      { id: 'superObj',   label: 'Super Objective (Life Goal)', placeholder: 'The overarching want across their whole life…', full: true },
+      { id: 'sceneObj',   label: 'Scene Objective',             placeholder: 'What do they want in this scene?' },
+      { id: 'immediate',  label: 'Immediate Want',              placeholder: 'What do they want right now?' },
+      { id: 'obstacles',  label: 'Obstacles',                   placeholder: 'What stands in the way?' },
+    ]
+  },
+  {
+    id: 'believe', title: '5. What Do I Believe?', desc: 'Values · Worldview · Ideology',
+    fields: [
+      { id: 'worldView', label: 'World View',       placeholder: 'How do they see the world at large?', full: true },
+      { id: 'values',    label: 'Values & Beliefs', placeholder: 'What do they hold sacred or true?' },
+      { id: 'fears',     label: 'Fears',            placeholder: 'Deep fears, phobias, vulnerabilities…' },
+      { id: 'secrets',   label: 'Secrets',          placeholder: 'What are they hiding?', full: true },
+    ]
+  },
+  {
+    id: 'where', title: '6. Where Am I?', desc: 'Place · Space · Atmosphere',
+    fields: [
+      { id: 'place',       label: 'Place / Location',          placeholder: 'Specific location in the world…' },
+      { id: 'environment', label: 'Environment / Surroundings', placeholder: 'What does the space look / feel like?' },
+      { id: 'placeFeeling', label: 'How I Feel About This Place', placeholder: 'Comfort? Dread? Nostalgia?', full: true },
+    ]
+  },
+  {
+    id: 'from', title: '7. Where Have I Come From?', desc: 'History · Memory · Roots',
+    fields: [
+      { id: 'background',    label: 'Background / History',    placeholder: 'Where are they from, backstory…', full: true },
+      { id: 'childhood',     label: 'Childhood Memories',      placeholder: 'Key formative experiences…', full: true },
+      { id: 'majorEvents',   label: 'Major Life Events',       placeholder: 'Turning points that shaped them…' },
+      { id: 'relationships', label: 'Key Relationships',       placeholder: 'Who matters most? Family, friends, enemies…' },
+    ]
+  },
+  {
+    id: 'going', title: '8. Where Am I Going?', desc: 'Future · Arc · Intention',
+    fields: [
+      { id: 'futureGoals', label: 'Future Goals / Dreams',    placeholder: 'What do they dream about?', full: true },
+      { id: 'endScene',    label: 'End of Scene Intention',   placeholder: 'Where do they want to land at scene\'s end?' },
+      { id: 'arc',         label: 'Character Arc / Journey',  placeholder: 'How do they change over the story?', full: true },
+    ]
+  },
+  {
+    id: 'overcome', title: '9. What Must I Overcome?', desc: 'Conflict · Flaw · Growth',
+    fields: [
+      { id: 'internal', label: 'Internal Conflict',  placeholder: 'The battle within themselves…', full: true },
+      { id: 'external', label: 'External Conflict',  placeholder: 'The battle with the world around them…', full: true },
+      { id: 'flaw',     label: 'Fatal Flaw',         placeholder: 'Their Achilles\' heel…' },
+      { id: 'growth',   label: 'Growth Needed',      placeholder: 'What must they learn or accept?' },
+    ]
+  },
+];
+
+// ══════════════════════════════════════════
+//  APP STATE
+// ══════════════════════════════════════════
+const App = (() => {
+  let currentView = 'home';
+  let currentSection = 0;
+  let draftData = null;
+  let library = [];
+  let autoSaveTimer = null;
+  let studyEntryId = null;
+
+  const LS_DRAFT = 'iq_draft';
+  const LS_LIBRARY = 'iq_library';
+
+  // ── INIT ──
+  function init() {
+    loadLibrary();
+    loadDraft();
+    buildForm();
+    updateLibBadge();
+  }
+
+  // ── VIEWS ──
+  function showView(v) {
+    document.querySelectorAll('.view').forEach(el => el.classList.remove('active'));
+    const el = document.getElementById(v === 'form' ? 'form-view' : v);
+    if (el) el.classList.add('active');
+    currentView = v;
+    if (v === 'library') renderLibrary();
+    if (v === 'home') updateLibBadge();
+    window.scrollTo(0, 0);
+  }
+
+  // ── DRAFT ──
+  function emptyDraft() {
+    const d = { id: null, charName: '', showName: '', senses: {}, notes: '', savedAt: null };
+    SECTIONS.forEach(s => s.fields.forEach(f => { d[f.id] = ''; }));
+    SENSES.forEach(s => { d.senses[s] = ''; });
+    return d;
+  }
+
+  function loadDraft() {
+    try {
+      const raw = localStorage.getItem(LS_DRAFT);
+      draftData = raw ? JSON.parse(raw) : emptyDraft();
+    } catch(e) { draftData = emptyDraft(); }
+  }
+
+  function saveDraft() {
+    draftData.charName = document.getElementById('input-char')?.value || draftData.charName;
+    draftData.showName = document.getElementById('input-show')?.value || draftData.showName;
+    SECTIONS.forEach(s => s.fields.forEach(f => {
+      const el = document.getElementById('field-' + f.id);
+      if (el) draftData[f.id] = el.value;
+    }));
+    SENSES.forEach(s => {
+      const el = document.getElementById('sense-' + s);
+      if (el) draftData.senses[s] = el.value;
+    });
+    const notesEl = document.getElementById('notes-textarea');
+    if (notesEl) draftData.notes = notesEl.value;
+    draftData.lastDraft = new Date().toISOString();
+
+    try { localStorage.setItem(LS_DRAFT, JSON.stringify(draftData)); } catch(e) {}
+    updateProgress();
+    updateSaveStatus();
+  }
+
+  function autoSave() {
+    clearTimeout(autoSaveTimer);
+    autoSaveTimer = setTimeout(() => {
+      saveDraft();
+    }, 600);
+  }
+
+  function updateSaveStatus() {
+    const el = document.getElementById('save-status');
+    if (!el) return;
+    const now = new Date();
+    el.textContent = 'Auto-saved at ' + now.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+  }
+
+  // ── LIBRARY ──
+  function loadLibrary() {
+    try {
+      const raw = localStorage.getItem(LS_LIBRARY);
+      library = raw ? JSON.parse(raw) : [];
+    } catch(e) { library = []; }
+  }
+
+  function saveLibraryToStorage() {
+    try { localStorage.setItem(LS_LIBRARY, JSON.stringify(library)); } catch(e) {}
+  }
+
+  function updateLibBadge() {
+    const el = document.getElementById('lib-count-badge');
+    if (el) el.textContent = library.length > 0 ? `(${library.length})` : '';
+  }
+
+  function newChar() {
+    draftData = emptyDraft();
+    try { localStorage.removeItem(LS_DRAFT); } catch(e) {}
+    currentSection = 0;
+    showView('form');
+    setTimeout(() => { populateFormFromDraft(); updateProgress(); }, 50);
+  }
+
+  function saveToLibrary() {
+    saveDraft();
+    if (!draftData.charName.trim() && !draftData.showName.trim()) {
+      showToast('Please enter a Character Name or Show name first!', 'error');
+      return;
+    }
+    if (draftData.id) {
+      // Update existing
+      const idx = library.findIndex(e => e.id === draftData.id);
+      if (idx !== -1) {
+        library[idx] = { ...draftData, savedAt: new Date().toISOString() };
+      } else {
+        library.unshift({ ...draftData, savedAt: new Date().toISOString() });
+      }
+    } else {
+      draftData.id = Date.now().toString();
+      library.unshift({ ...draftData, savedAt: new Date().toISOString() });
+    }
+    saveLibraryToStorage();
+    updateLibBadge();
+    showToast('Saved to Library! 🎭');
+  }
+
+  function editEntry(id) {
+    const entry = library.find(e => e.id === id);
+    if (!entry) return;
+    draftData = { ...entry, senses: { ...entry.senses } };
+    currentSection = 0;
+    showView('form');
+    setTimeout(() => { populateFormFromDraft(); updateProgress(); }, 50);
+  }
+
+  function deleteEntry(id) {
+    if (!confirm('Delete this character? This cannot be undone.')) return;
+    library = library.filter(e => e.id !== id);
+    saveLibraryToStorage();
+    updateLibBadge();
+    renderLibrary();
+    showToast('Deleted.');
+  }
+
+  function studyEntry(id) {
+    const entry = library.find(e => e.id === id);
+    if (!entry) return;
+    studyEntryId = id;
+    renderStudy(entry);
+    showView('study');
+  }
+
+  // ── BUILD FORM ──
+  function buildForm() {
+    const nav = document.getElementById('sidebar-nav');
+    const main = document.getElementById('form-main-content');
+    nav.innerHTML = '';
+    main.innerHTML = '';
+
+    SECTIONS.forEach((sec, idx) => {
+      // Sidebar nav button
+      const btn = document.createElement('button');
+      btn.className = 'snav-btn' + (idx === 0 ? ' active' : '');
+      btn.id = 'snav-' + sec.id;
+      btn.innerHTML = `<span class="sec-num">${idx + 1}</span>${sec.title.replace(/^\d+\.\s*/, '')}`;
+      btn.onclick = () => goToSection(idx);
+      nav.appendChild(btn);
+
+      // Section content
+      const div = document.createElement('div');
+      div.className = 'section-content' + (idx === 0 ? ' active' : '');
+      div.id = 'sec-' + sec.id;
+
+      let html = `<div class="sec-heading">${sec.title}</div>
+        <div class="sec-desc">${sec.desc}</div>`;
+
+      // Senses on section 1
+      if (idx === 0) {
+        html += `<div class="senses-bar">
+          <div class="senses-title">The 5 Senses — how your character experiences the world</div>
+          <div class="senses-grid">`;
+        SENSES.forEach(s => {
+          html += `<div class="sense-item">
+            <label>${s}</label>
+            <textarea id="sense-${s}" placeholder="How do they experience ${s.toLowerCase()}?" oninput="App.autoSave()"></textarea>
+          </div>`;
+        });
+        html += `</div></div>`;
+      }
+
+      html += `<div class="fields-grid">`;
+      sec.fields.forEach(f => {
+        html += `<div class="field-wrap${f.full ? ' field-full' : ''}">
+          <label class="field-label">${f.label}</label>
+          <textarea id="field-${f.id}" placeholder="${f.placeholder}" rows="3" oninput="App.autoSave()"></textarea>
+        </div>`;
+      });
+      html += `</div>`;
+
+      // Notes section (last section only, but accessible from any via bottom)
+      if (idx === SECTIONS.length - 1) {
+        html += `<div class="notes-block">
+          <div class="notes-header">✎ Notes — Anything else you discover about your character</div>
+          <textarea id="notes-textarea" placeholder="Add any observations, director's notes, rehearsal discoveries, quotes, or anything that doesn't fit the questions above…" oninput="App.autoSave()"></textarea>
+        </div>`;
+      }
+
+      // Navigation buttons
+      html += `<div class="form-nav">`;
+      if (idx > 0) html += `<button class="nav-prev" onclick="App.goToSection(${idx - 1})">← Previous</button>`;
+      if (idx < SECTIONS.length - 1) {
+        html += `<button class="nav-next" onclick="App.goToSection(${idx + 1})">Next →</button>`;
+      } else {
+        html += `<button class="nav-next" onclick="App.saveToLibrary()">✦ Save to Library</button>`;
+      }
+      html += `</div>`;
+
+      div.innerHTML = html;
+      main.appendChild(div);
+    });
+
+    populateFormFromDraft();
+  }
+
+  function populateFormFromDraft() {
+    if (!draftData) return;
+    const charEl = document.getElementById('input-char');
+    const showEl = document.getElementById('input-show');
+    if (charEl) charEl.value = draftData.charName || '';
+    if (showEl) showEl.value = draftData.showName || '';
+
+    SECTIONS.forEach(s => s.fields.forEach(f => {
+      const el = document.getElementById('field-' + f.id);
+      if (el) el.value = draftData[f.id] || '';
+    }));
+    SENSES.forEach(s => {
+      const el = document.getElementById('sense-' + s);
+      if (el) el.value = (draftData.senses && draftData.senses[s]) || '';
+    });
+    const notesEl = document.getElementById('notes-textarea');
+    if (notesEl) notesEl.value = draftData.notes || '';
+    goToSection(currentSection);
+  }
+
+  function goToSection(idx) {
+    saveDraft();
+    currentSection = idx;
+    document.querySelectorAll('.section-content').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.snav-btn').forEach(el => el.classList.remove('active'));
+    const sec = SECTIONS[idx];
+    const secEl = document.getElementById('sec-' + sec.id);
+    const navEl = document.getElementById('snav-' + sec.id);
+    if (secEl) secEl.classList.add('active');
+    if (navEl) navEl.classList.add('active');
+    window.scrollTo(0, 0);
+    updateProgress();
+  }
+
+  function updateProgress() {
+    let total = 0, filled = 0;
+    SECTIONS.forEach(s => s.fields.forEach(f => {
+      total++;
+      const el = document.getElementById('field-' + f.id);
+      if (el && el.value.trim()) filled++;
+    }));
+    const pct = total > 0 ? Math.round(filled / total * 100) : 0;
+    const circumference = 2 * Math.PI * 30;
+    const ringEl = document.getElementById('ring-fill');
+    const labelEl = document.getElementById('prog-label');
+    if (ringEl) ringEl.setAttribute('stroke-dasharray', `${circumference * pct / 100} ${circumference}`);
+    if (labelEl) labelEl.textContent = pct + '% Complete';
+  }
+
+  // ── RENDER LIBRARY ──
+  function renderLibrary() {
+    const search = (document.getElementById('lib-search')?.value || '').toLowerCase();
+    const body = document.getElementById('lib-body');
+    if (!body) return;
+
+    const filtered = library.filter(e =>
+      (e.charName || '').toLowerCase().includes(search) ||
+      (e.showName || '').toLowerCase().includes(search)
+    );
+
+    if (filtered.length === 0) {
+      body.innerHTML = `<div class="empty-state">
+        <div class="empty-icon">🎭</div>
+        <p>${library.length === 0 ? 'No characters yet. Start by creating your first one!' : 'No results for "' + search + '"'}</p>
+        ${library.length === 0 ? '<button class="btn-gold" onclick="App.newChar()">✦ Create Character</button>' : ''}
+      </div>`;
+      return;
+    }
+
+    // Group by show
+    const groups = {};
+    filtered.forEach(e => {
+      const key = e.showName || '— No Show Listed —';
+      if (!groups[key]) groups[key] = [];
+      groups[key].push(e);
+    });
+
+    body.innerHTML = Object.entries(groups).map(([show, entries]) => `
+      <div class="show-group">
+        <div class="show-label">🎬 ${escHtml(show)}</div>
+        <div class="cards-row">
+          ${entries.map(e => `
+            <div class="char-card" onclick="App.studyEntry('${e.id}')">
+              <div class="char-card-name">${escHtml(e.charName || 'Unnamed')}</div>
+              <div class="char-card-occ">${escHtml(e.occupation || '')}</div>
+              <div class="char-card-date">${e.savedAt ? new Date(e.savedAt).toLocaleDateString() : 'Draft'}</div>
+              <div class="char-card-actions" onclick="event.stopPropagation()">
+                <button class="ccard-btn study" onclick="App.studyEntry('${e.id}')">Study</button>
+                <button class="ccard-btn edit" onclick="App.editEntry('${e.id}')">Edit</button>
+                <button class="ccard-btn del" onclick="App.deleteEntry('${e.id}')">✕</button>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `).join('');
+  }
+
+  // ── RENDER STUDY ──
+  function renderStudy(entry) {
+    document.getElementById('study-char-name').textContent = entry.charName || 'Unnamed Character';
+    document.getElementById('study-show-name').textContent = entry.showName || '';
+    document.getElementById('study-edit-btn').onclick = () => editEntry(entry.id);
+
+    const body = document.getElementById('study-body');
+    let html = '';
+
+    // Senses
+    const sensesWithVal = SENSES.filter(s => entry.senses && entry.senses[s]);
+    if (sensesWithVal.length > 0) {
+      html += `<div class="study-senses">
+        <div class="study-senses-title">The 5 Senses</div>
+        <div class="study-senses-row">
+          ${sensesWithVal.map(s => `
+            <div class="study-sense-chip">
+              <span class="study-sense-name">${s}</span>
+              <span class="study-sense-val">${escHtml(entry.senses[s])}</span>
+            </div>`).join('')}
+        </div>
+      </div>`;
+    }
+
+    // Accordion sections
+    html += `<div class="study-accordion">`;
+    SECTIONS.forEach(sec => {
+      const filledFields = sec.fields.filter(f => entry[f.id] && entry[f.id].trim());
+      if (filledFields.length === 0) return;
+      const uid = 'acc-' + sec.id;
+      html += `<div class="acc-item">
+        <button class="acc-trigger" onclick="App.toggleAcc('${uid}')">
+          <span class="acc-title">${sec.title}</span>
+          <span class="acc-count">${filledFields.length}/${sec.fields.length}</span>
+          <span class="acc-chevron">▼</span>
+        </button>
+        <div class="acc-body" id="${uid}">
+          <div class="acc-fields">
+            ${filledFields.map(f => `
+              <div class="acc-field${f.full ? ' field-full' : ''}">
+                <div class="acc-field-label">${f.label}</div>
+                <div class="acc-field-val">${escHtml(entry[f.id])}</div>
+              </div>`).join('')}
+          </div>
+        </div>
+      </div>`;
+    });
+    html += `</div>`;
+
+    // Notes
+    if (entry.notes && entry.notes.trim()) {
+      html += `<div class="study-notes-block">
+        <div class="study-notes-title">✎ Notes</div>
+        <div class="study-notes-val">${escHtml(entry.notes)}</div>
+      </div>`;
+    }
+
+    body.innerHTML = html;
+  }
+
+  function toggleAcc(id) {
+    const body = document.getElementById(id);
+    const btn = body?.previousElementSibling;
+    if (!body) return;
+    const isOpen = body.classList.contains('open');
+    body.classList.toggle('open', !isOpen);
+    if (btn) btn.classList.toggle('open', !isOpen);
+  }
+
+  // ── TOAST ──
+  let toastTimer = null;
+  function showToast(msg, type) {
+    const el = document.getElementById('toast');
+    if (!el) return;
+    el.textContent = msg;
+    el.className = 'show' + (type ? ' ' + type : '');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => { el.className = ''; }, 2800);
+  }
+
+  // ── UTILS ──
+  function escHtml(str) {
+    return String(str || '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/\n/g, '<br>');
+  }
+
+  // ── RESUME DRAFT CHECK ──
+  function checkResumeDraft() {
+    try {
+      const raw = localStorage.getItem(LS_DRAFT);
+      if (raw) {
+        const d = JSON.parse(raw);
+        if (d && (d.charName || d.showName || Object.values(d).some(v => typeof v === 'string' && v.trim()))) {
+          return true;
+        }
+      }
+    } catch(e) {}
+    return false;
+  }
+
+  // Public API
+  return { showView, newChar, saveToLibrary, editEntry, deleteEntry, studyEntry, autoSave, goToSection, toggleAcc, renderLibrary, init };
+})();
+
+// ══════════════════════════════════════════
+//  BOOT
+// ══════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', () => {
+  App.init();
+});
+</script>
+</body>
+</html>
